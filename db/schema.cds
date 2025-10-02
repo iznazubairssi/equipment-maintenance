@@ -1,9 +1,7 @@
-namespace D4iot;
+namespace d4iot;
 
-using { managed } from '@sap/cds/common';
-
-// Based on /D4IOT/EQUIPMTD
-entity Equipments : managed {
+// Remove 'managed' temporarily
+entity Equipments {
     key EQUIPMENT          : String(18);
     EQNAME                 : String(40);
     EQDESC                 : String(120);
@@ -27,7 +25,6 @@ entity Equipments : managed {
     EQTYPE                 : Association to one EquipmentTypes;
 }
 
-// Based on /D4IOT/EQUIPTYPE
 entity EquipmentTypes {
     key EQTYPE                 : String(2);
     EQTYPE_DESC                : String(40);

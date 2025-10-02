@@ -1,39 +1,41 @@
 using EquipmentService from './service';
 
-// Annotations for the List Report page (the initial search and results screen)
 annotate EquipmentService.Equipments with @(
     UI: {
-        // Defines the columns in the results table [cite: 392]
+        // List Report - Using your exact field names
         LineItem: [
             { Value: EQUIPMENT, Label: 'Equipment ID' },
-            { Value: EQNAME, Label: 'Name' },
+            { Value: EQNAME, Label: 'Equipment Name' },
             { Value: EQDESC, Label: 'Description' },
             { Value: EQTYPE_EQTYPE, Label: 'Type' },
-            { Value: INACTIVE, Label: 'Inactive' }
+            { Value: INACTIVE, Label: 'Inactive' },
+            { Value: EQUNR_SAP, Label: 'SAP Equipment' }
         ],
-        // Defines the search fields on the filter bar [cite: 264]
-        SelectionFields: [ EQUIPMENT, EQNAME, EQTYPE_EQTYPE ]
-    }
-);
-
-// Annotations for the Object Page (the detailed maintenance screen)
-annotate EquipmentService.Equipments with @(
-    UI: {
-        // Defines the header of the page
+        
+        SelectionFields: [ 
+            EQUIPMENT, 
+            EQNAME, 
+            EQTYPE_EQTYPE,
+            INACTIVE,
+            EQUNR_SAP
+        ],
+        
+        // Object Page
         HeaderInfo: {
             TypeName: 'Equipment',
             TypeNamePlural: 'Equipments',
             Title: { Value: EQNAME },
             Description: { Value: EQUIPMENT }
         },
-        // Defines the sections/tabs on the page [cite: 286-292]
+        
+        // Tabs
         Facets: [
             {
                 $Type: 'UI.CollectionFacet',
                 Label: 'General',
                 ID: 'General',
                 Facets: [
-                    { $Type: 'UI.ReferenceFacet', Label: 'General Data', Target: '@UI.FieldGroup#General' }
+                    { $Type: 'UI.ReferenceFacet', Label: 'Equipment Data', Target: '@UI.FieldGroup#General' }
                 ]
             },
             {
@@ -41,8 +43,32 @@ annotate EquipmentService.Equipments with @(
                 Label: 'Status and Network',
                 ID: 'StatusNetwork',
                 Facets: [
-                    { $Type: 'UI.ReferenceFacet', Label: 'Status', Target: '@UI.FieldGroup#Status' },
-                    { $Type: 'UI.ReferenceFacet', Label: 'Link', Target: '@UI.FieldGroup#Link' }
+                    { $Type: 'UI.ReferenceFacet', Label: 'Status Creation', Target: '@UI.FieldGroup#Status' },
+                    { $Type: 'UI.ReferenceFacet', Label: 'Network', Target: '@UI.FieldGroup#Network' }
+                ]
+            },
+            {
+                $Type: 'UI.CollectionFacet',
+                Label: 'Alarm',
+                ID: 'Alarm',
+                Facets: [
+                    { $Type: 'UI.ReferenceFacet', Label: 'Alarm Creation', Target: '@UI.FieldGroup#Alarm' }
+                ]
+            },
+            {
+                $Type: 'UI.CollectionFacet',
+                Label: 'Process Data',
+                ID: 'ProcessData',
+                Facets: [
+                    { $Type: 'UI.ReferenceFacet', Label: 'Process Data Creation', Target: '@UI.FieldGroup#ProcessData' }
+                ]
+            },
+            {
+                $Type: 'UI.CollectionFacet',
+                Label: 'Links',
+                ID: 'Links',
+                Facets: [
+                    { $Type: 'UI.ReferenceFacet', Label: 'External Links', Target: '@UI.FieldGroup#Links' }
                 ]
             },
             {
@@ -50,18 +76,19 @@ annotate EquipmentService.Equipments with @(
                 Label: 'Admin',
                 ID: 'Admin',
                 Facets: [
-                    { $Type: 'UI.ReferenceFacet', Label: 'Admin Data', Target: '@UI.FieldGroup#Admin' }
+                    { $Type: 'UI.ReferenceFacet', Label: 'Administrative Data', Target: '@UI.FieldGroup#Admin' }
                 ]
             }
         ],
-        // Groups fields together for display in the sections defined above
+
         FieldGroup#General: {
             Data: [
-                { Value: EQUIPMENT },
-                { Value: EQNAME },
-                { Value: EQDESC },
+                { Value: EQUIPMENT, Label: 'Equipment ID' },
+                { Value: EQNAME, Label: 'Equipment Name' },
+                { Value: EQDESC, Label: 'Description' },
                 { Value: EQTYPE_EQTYPE, Label: 'Equipment Type' },
-                { Value: EQUNR_SAP, Label: 'SAP Equipment Number' }
+                { Value: EQUNR_SAP, Label: 'SAP Equipment Number' },
+                { Value: INACTIVE, Label: 'Inactive' }
             ]
         },
         FieldGroup#Status: {
@@ -71,19 +98,50 @@ annotate EquipmentService.Equipments with @(
                 { Value: STATUSLOGIC, Label: 'Status Logic Table' }
             ]
         },
-        FieldGroup#Link: {
+        FieldGroup#Network: {
             Data: [
-                { Value: LINKTEXT },
-                { Value: LINK }
+                { Value: OTACTIVE, Label: 'Network Active?' },
+                { Value: OTTYPE, Label: 'Daemon Type' },
+                { Value: OTDAEMON, Label: 'Daemon ID' }
+            ]
+        },
+        FieldGroup#Alarm: {
+            Data: [
+                { Value: ALARMMANACTIVE, Label: 'Manual Alarm Creation Active?' },
+                { Value: ALARM2STATUS, Label: 'Alarm 2 Status Active?' },
+                { Value: ALARMSTRUCTURE, Label: 'Alarm Structure Table' }
+            ]
+        },
+        FieldGroup#ProcessData: {
+            Data: [
+                { Value: PDATAMANACTIVE, Label: 'Manual Process Data Creation Active?' },
+                { Value: PDATASTRUCTURE, Label: 'Process Data Structure' }
+            ]
+        },
+        FieldGroup#Links: {
+            Data: [
+                { Value: LINKTEXT, Label: 'Link Text' },
+                { Value: LINK, Label: 'Link URL' }
             ]
         },
         FieldGroup#Admin: {
             Data: [
-                { Value: createdBy },
-                { Value: createdAt },
-                { Value: modifiedBy },
-                { Value: modifiedAt }
+                { Value: createdBy, Label: 'Created By' },
+                { Value: createdAt, Label: 'Created At' },
+                { Value: modifiedBy, Label: 'Changed By' },
+                { Value: modifiedAt, Label: 'Changed On' }
             ]
         }
+    }
+);
+
+//EquipmentTypes
+annotate EquipmentService.EquipmentTypes with @(
+    UI: {
+        LineItem: [
+            { Value: EQTYPE, Label: 'Equipment Type' },
+            { Value: EQTYPE_DESC, Label: 'Description' },
+            { Value: EQTYPE_STATUS_CAPABLE, Label: 'Status Capable' }
+        ]
     }
 );
